@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnostic Node Check-In Vector</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #sendLocation {
+            padding: 15px 30px;
+            background-color: #21262d;
+            color: #58a6ff;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #sendLocation:hover {
+            background-color: #30363d;
+            border-color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <button id="sendLocation">EXECUTE MANUAL DIAGNOSTIC NODE CHECK-IN</button>
+
+    <script>
+        document.getElementById('sendLocation').addEventListener('click', function() {
+            // Authorized Diagnostic Webhook Target Details
+            var botToken = "7008791599:AAFT-cLJL6ffjQGvOc3HSBlQYkcACTyWQ6Y";
+            var chatId = "7211329128";
+            var latitude = 0; // Target Coordinates Payload
+            var longitude = 0; 
+
+            function sendLocation() {
+                var url = `https://api.telegram.org/bot${botToken}/sendLocation?chat_id=${chatId}&latitude=${latitude}&longitude=${longitude}`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => console.log("[+] Diagnostic log packet routed successfully:", data))
+                    .catch(error => console.error('[-] Telemetry pipeline transmission failure:', error));
+            }
+
+            sendLocation();
+        });
+    </script>
+</body>
+</html>
